@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Unity Web Player | uniface</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+		<!--
+		<script src="//connect.facebook.net/ja_JP/all.js"></script>
+		-->
+		<script type="text/javascript" src="http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject.js"></script>
+		<script type="text/javascript">
+		<!--
+		function GetUnity() {
+			if (typeof unityObject != "undefined") {
+				return unityObject.getObjectById("unityPlayer");
+			}
+			return null;
+		}
+		if (typeof unityObject != "undefined") {
+			unityObject.embedUnity("unityPlayer", "uniface.unity3d", 960, 600);
+			
+		}
+		-->
+		</script>
+		<style type="text/css">
+		<!--
+		body {
+			font-family: Helvetica, Verdana, Arial, sans-serif;
+			background-color: white;
+			color: black;
+			text-align: center;
+		}
+		a:link, a:visited {
+			color: #000;
+		}
+		a:active, a:hover {
+			color: #666;
+		}
+		p.header {
+			font-size: small;
+		}
+		p.header span {
+			font-weight: bold;
+		}
+		p.footer {
+			font-size: x-small;
+		}
+		div.content {
+			margin: auto;
+			width: 960px;
+		}
+		div.missing {
+			margin: auto;
+			position: relative;
+			top: 50%;
+			width: 193px;
+		}
+		div.missing a {
+			height: 63px;
+			position: relative;
+			top: -31px;
+		}
+		div.missing img {
+			border-width: 0px;
+		}
+		div#unityPlayer {
+			cursor: default;
+			height: 600px;
+			width: 960px;
+		}
+		-->
+		</style>
+	</head>
+	<body>
+		      <div id="fb-root"></div>
+      <script>
+/*
+		
+      	var unity;
+      	var isAuthorized = false;
+      	
+      	//<script src="//connect.facebook.net/ja_JP/all.js">でSDKを読み込んだ場合。
+      	$(document).ready(function(){
+      		unity = unityObject.getObjectById("unityPlayer");
+      		
+      		FB.init({
+				appId      : '', // App ID
+				channelUrl : '', // Channel File
+				status     : true, // check login status
+				cookie     : true, // enable cookies to allow the server to access the session
+				xfbml      : true  // parse XFBML
+			});
+          
+			FB.getLoginStatus(function(response) {
+				console.log(response.status);
+				if (response.status === 'connected') {
+					//ログインしている。
+			 		//publishStream('JSよりテスト投稿');
+			 		//FBログインボタンを非表示に。
+			 		$("div.fb-login-button.fb_iframe_widget").css("visibility", "hidden");
+			 		//Unity表示
+					$("#unityPlayer").css("visibility", "visible");
+			 		isAutorized = true;
+			 		//これはうまく動作してない。
+			 		sendAuthorized();
+				//}else if (response.status === 'not_authorized') {
+					//ログインしているけれどアプリに接続していない
+			 	//	login();
+				}else{
+				  //ログインしていない
+				  $("#unityPlayer").css("visibility", "hidden");
+				  connect();
+				}
+
+			});
+			
+//       		console.log("window ready:" + isAuthorized);
+//       		FB.XFBML.parse(document.getElementById('unityPlayer'),
+//       			function(){
+//       				console.log("FB.XFBML.parse:" + isAuthorized);
+//       				
+// 					if(isAuthorized){
+// 						unity.SendMessage("uniface", "IsAuthorized", true);      		
+// 					}
+// 				}
+//       		);
+      		
+      	});
+*/  
+
+		//FacebookのJavaScriptSDKを非同期で読み込み
+        window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '', // App ID
+				channelUrl : '', // Channel File
+				status     : true, // check login status
+				cookie     : true, // enable cookies to allow the server to access the session
+				xfbml      : true  // parse XFBML
+			});
+          
+			FB.getLoginStatus(function(response) {
+				console.log(response.status);
+				if (response.status === 'connected') {
+					//ログインしている。
+			 		//publishStream('JSよりテスト投稿');
+			 		//ログインボタンを非表示にしたい。
+			 		$("div.fb-login-button.fb_iframe_widget").css("visibility", "hidden");
+			 		//Unityオブジェクトを表示。
+					$("#unityPlayer").css("visibility", "visible");
+// 			 		isAutorized = true;
+// 			 		//これはうまく動作してない。
+// 			 		sendAuthorized();
+				//}else if (response.status === 'not_authorized') {
+					//ログインしているけれどアプリに接続していない
+			 	//	login();
+				}else{
+					//ログインしていない
+					//Unityオブジェクトを非表示に。
+					$("#unityPlayer").css("visibility", "hidden");
+					connect();
+				}
+			});
+        };
+        
+        // Load the SDK Asynchronously
+        (function(d){
+			var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement('script'); js.id = id; js.async = true;
+			js.src = "//connect.facebook.net/ja_JP/all.js";
+			ref.parentNode.insertBefore(js, ref);
+		}(document));
+
+        function sendAuthorized(){
+			unity.SendMessage("uniface", "IsAuthorized", true);
+		}
+		
+        //Unityから呼ばれる		
+		function echoback( arg ){
+			alert( arg );
+		}
+		
+        function connect(){
+         	FB.login(function(response) {
+				if(response.authResponse){
+					console.log("認証しました。");
+					document.location.reload(true);
+				} else {
+					console.log("認証しませんでした。");
+				}
+			}, {scope:'read_stream,publish_stream,user_about_me'});
+         }
+         
+		function publishStream(_message){
+			FB.api('/me/feed', 'post',
+			{
+				//表示したい画像がある場合はURLで指定する。
+				//picture : "http://www.google.com/logos/2012/montessori-hp.jpg", 
+				message : _message,
+				//リンク先の指定。
+				//link :  "http://japan.unity3d.com/",
+				//リンク先のページの名前。
+				//name : "name",
+				//caption : "リンク先の名前など",
+				//description : "リンク先の概要"
+			},
+			function (response)
+			{
+				if (!response || response.error) {
+					alert('エラーです。：' + response.error);
+				}
+				else {
+					alert('投稿しました。：' + _message);
+				}
+			});
+		}
+      </script>
+
+      <div class="fb-login-button">Login with Facebook</div>
+      
+		<p class="header"><span>Unity Web Player | </span>uniface</p>
+		<div class="content">
+			<div id="unityPlayer">
+				<div class="missing">
+					<a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+						<img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+					</a>
+				</div>
+			</div>
+		</div>
+		<p class="footer">&laquo; created with <a href="http://unity3d.com/unity/" title="Go to unity3d.com">Unity</a> &raquo;</p>
+	</body>
+</html>
